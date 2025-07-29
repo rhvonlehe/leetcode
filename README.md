@@ -39,3 +39,6 @@ Constraints:
     1 <= nums.length <= 16
     1 <= nums[i] <= 105
 
+
+See editorial here: https://leetcode.com/problems/count-number-of-maximum-bitwise-or-subsets/editorial
+
