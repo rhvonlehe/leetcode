@@ -14,33 +14,6 @@ void printVec(vector<int>& vec)
     cout << endl;
 }
 
-#if 0
-int hasUniqueBits(int left, int right)
-{
-    int xorResult = left ^ right;
-
-    int finalResult = left & xorResult;
-
-    return finalResult;
-}
-
-int getCountToMaxOr(vector<int>& nums, vector<int>& maxOrVec, int index)
-{
-    int cumulativeOr = nums[index];
-    int count = 1;
-
-    cumulativeOr |= nums[index + 1];
-
-    if (cumulativeOr > maxOrVec[index + 1])
-    {
-        maxOrVec[index] = cumulativeOr;
-        count++;
-    }
-
-    return (pos - index) + 1;
-}
-#endif
-
 using mybitset = bitset<30>;
 
 struct Context
@@ -54,43 +27,18 @@ struct Context
     vector<int>& nums;
     vector<int> smallestSubVec;
     vector<int> leftmostPosnBitSet;      // keeps track of leftmost posn a bit is set
-
 };
 
-
-int getNearestWithBitSet(Context& ctx, int index, int bit)
-{
-    return (ctx.leftmostPosnBitSet[bit] - index) + 1;
-
-
-#if 0 // old
-    int distance{};
-
-    for (int iter = index; iter < nums.size(); ++iter)
-    {
-        mybitset number = nums[iter];
-        if (number.test(bit))
-        {
-            distance = iter - index + 1;
-            break;
-        }
-    }
-
-    return distance;
-#endif
-}
-
-int getCount(Context& ctx, bitset<30>& maxOr, int index)
+int getCount(Context& ctx, mybitset& maxOr, int index)
 {
     int maxCount{};
-    int bitcount = maxOr.count();
     auto size = maxOr.size();
 
     for (int bit = 0; bit < size; ++bit)
     {
         if (maxOr.test(bit))
         {
-            auto count = getNearestWithBitSet(ctx, index, bit);
+            auto count = ctx.leftmostPosnBitSet[bit] - index + 1;
             if (count > maxCount)
                 maxCount = count;
         }
@@ -99,7 +47,7 @@ int getCount(Context& ctx, bitset<30>& maxOr, int index)
     return maxCount;
 }
 
-void updateLeftmostBits(Context& ctx, mybitset num, int index)
+void updateLeftmostBits(Context& ctx, mybitset& num, int index)
 {
     auto size = num.size();
 
@@ -144,7 +92,6 @@ public:
                 maxOr = newOr;
                 ctx.smallestSubVec[index] = getCount(ctx, maxOr, index);
             }
-
         }
 
         return ctx.smallestSubVec;
